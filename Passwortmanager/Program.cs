@@ -101,9 +101,11 @@ class Program
 
     static void NewPassword()
     {      
-        string use;
+        string use = "\\";
         string password;
-        string path = @"x:\Passwords\password";
+        string path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +"\\passwords\\";
+        if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
         Console.Write("Which usage?: ");
         use = Console.ReadLine();
         Console.Write("Type here your password: ");
@@ -119,7 +121,7 @@ class Program
     static void Setpassword()
     {
         string adminPassword;
-        string path = @"x:\Passwords\MasterPassword.txt";
+        string path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\MasterPassword.txt";
         Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
         adminPassword = Console.ReadLine();
         File.WriteAllText(Path.Combine(path), adminPassword);
@@ -128,7 +130,8 @@ class Program
     static void GetPassword()
     {
         string input;
-        string MasterPassword = File.ReadAllText(@":\Passwords\MasterPassword.txt");
+        string path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\MasterPassword.txt";
+        string MasterPassword = File.ReadAllText(path);
         int x = 0;
         while (true)
         {
@@ -150,7 +153,7 @@ class Program
         }
         while (true)
         {
-            string fileName = @"x:\Passwords\password";
+            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\";
             Console.Write("Which password do you want?: ");
             input = Console.ReadLine();
             fileName += input;
@@ -175,7 +178,8 @@ class Program
     static void Delete()
     {
         string input;
-        string MasterPassword = File.ReadAllText(@"X:\Passwords\MasterPassword.txt");
+        string path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\MasterPassword.txt";
+        string MasterPassword = File.ReadAllText(path);
         int x = 0;
         while (true)
         {
@@ -197,8 +201,8 @@ class Program
         }
         while (true)
         {
-            string fileName = @"x:\Passwords\password";
-            Console.Write("Which password do you wan't to delete?: ");
+            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\";
+            Console.Write("Which password do you want to delete?: ");
             input = Console.ReadLine();
             fileName += input;
             if (File.Exists(fileName))
@@ -235,8 +239,8 @@ class Program
         int passwordSC;
         int passwordNR;
         string input;
-        string MasterPassword = File.ReadAllText(@"X:\Passwords\MasterPassword.txt");
-        int x = 0;
+        string path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\MasterPassword.txt";
+        string MasterPassword = File.ReadAllText(path); int x = 0;
         while (true)
         {
             Console.Write("Type your ADMINPASSWORD: ");
@@ -257,7 +261,7 @@ class Program
         }
         while (true)
         {
-            string fileName = @"x:\Passwords\password";
+            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\";
             Console.Write("Which password do you want?: ");
             input = Console.ReadLine();
             fileName += input;
