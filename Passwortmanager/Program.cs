@@ -6,7 +6,7 @@ class Program
     
     public static void Main()
     {
-        //Encrypten/decrypten (Masterpassword als key benutzen)
+        
         
         string[] commands = new string[8];
         commands[0] = "generate password";
