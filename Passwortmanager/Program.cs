@@ -201,9 +201,9 @@ class Program
             string fileName = Path.Combine(basePath, input);
             if (File.Exists(fileName))
             {
-                Console.Write("Are you sure? [J/N]: ");
+                Console.Write("Are you sure? [Y/N]: ");
                 input = Console.ReadLine();
-                if (input == "J")
+                if (input == "Y" || input == "y")
                 {
                     File.Delete(fileName);
                     Console.WriteLine("Password was sucessfully deleted!");
