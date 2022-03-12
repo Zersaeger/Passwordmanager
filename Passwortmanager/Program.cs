@@ -3,9 +3,12 @@ class Program
 {
     public static bool run = true;
     public static string passwordGen = "";
+    public static string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "passwords");
 
     public static void Main()
-    {        
+    {
+        if (!Directory.Exists(basePath))
+            Directory.CreateDirectory(basePath);
         string[] commands = new string[9];
         commands[0] = "generate password";
         commands[1] = "new password";
@@ -17,7 +20,7 @@ class Program
         commands[7] = "password strength";
         Console.WriteLine("Hello. What do you want to do? Say 'commands' to see all of them.");
         while (run)
-        {           
+        {
             Console.Write("Command<< ");
             string cmd = Console.ReadLine();
             if (cmd == commands[0])
@@ -63,7 +66,7 @@ class Program
             {
                 Console.WriteLine("hmmm this command doesn't exists yet...");
             }
-        }       
+        }
     }
 
     static void Generate()
@@ -73,11 +76,11 @@ class Program
         string input = Console.ReadLine();
         x = int.Parse(input);
         Console.WriteLine("This is your random password: ");
-        List<char> charakters = new(94) { '!', '§', '$', '%', '&', '/', '(', ')', '[', ']', '{', '}', '=', '\\', '?', '~', '#', '*', '-', '_', '+', '<', '>', '|', ';', ',', '"', '\'', '.', ':', '°', '^' };   
+        List<char> charakters = new(94) { '!', '§', '$', '%', '&', '/', '(', ')', '[', ']', '{', '}', '=', '\\', '?', '~', '#', '*', '-', '_', '+', '<', '>', '|', ';', ',', '"', '\'', '.', ':', '°', '^' };
         for (char i = 'A'; i <= 'Z'; i++)
         {
             charakters.Add(i);
-            
+
         }
         for (char i = 'a'; i <= 'z'; i++)
         {
@@ -86,7 +89,7 @@ class Program
         for (char i = '0'; i <= '9'; i++)
         {
             charakters.Add(i);
-        }       
+        }
         Random random = new();
         char[] genPassword = new char[x];
         for(int j = 0; j < x; j++)
@@ -100,38 +103,32 @@ class Program
     }
 
     static void NewPassword()
-    {      
-        string use = "\\";
+    {
         string password;
-        string path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +"\\passwords\\";
-        if (!Directory.Exists(path))
-            Directory.CreateDirectory(path);
         Console.Write("Which usage?: ");
-        use = Console.ReadLine();
+        string use = Console.ReadLine();
         Console.Write("Type here your password: ");
         password = Console.ReadLine();
-        path += use;
+        string filename = Path.Combine(basePath, use);
         if (password == "generated password" && passwordGen != "")
         {
             password = passwordGen;
         }
-        File.WriteAllText(Path.Combine(path), password);
+        File.WriteAllText(filename, password);
     }
 
     static void Setpassword()
     {
         string adminPassword;
-        string path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\MasterPassword.txt";
         Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
         adminPassword = Console.ReadLine();
-        File.WriteAllText(Path.Combine(path), adminPassword);
+        File.WriteAllText(Path.Combine(basePath, "MasterPassword.txt"), adminPassword);
     }
 
     static void GetPassword()
     {
         string input;
-        string path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\MasterPassword.txt";
-        string MasterPassword = File.ReadAllText(path);
+        string MasterPassword = File.ReadAllText(Path.Combine(basePath, "MasterPassword.txt"));
         int x = 0;
         while (true)
         {
@@ -153,15 +150,14 @@ class Program
         }
         while (true)
         {
-            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\";
             Console.Write("Which password do you want?: ");
             input = Console.ReadLine();
-            fileName += input;
+            string fileName = Path.Combine(basePath, input);
             if (File.Exists(fileName))
             {
                 string fileContent;
                 fileContent = File.ReadAllText(fileName);
-                Console.WriteLine(fileContent);            
+                Console.WriteLine(fileContent);
                 break;
             }
             else if(input == "exit")
@@ -178,8 +174,7 @@ class Program
     static void Delete()
     {
         string input;
-        string path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\MasterPassword.txt";
-        string MasterPassword = File.ReadAllText(path);
+        string MasterPassword = File.ReadAllText(Path.Combine(basePath, "MasterPassword.txt"));
         int x = 0;
         while (true)
         {
@@ -201,10 +196,9 @@ class Program
         }
         while (true)
         {
-            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\";
             Console.Write("Which password do you want to delete?: ");
             input = Console.ReadLine();
-            fileName += input;
+            string fileName = Path.Combine(basePath, input);
             if (File.Exists(fileName))
             {
                 Console.Write("Are you sure? [J/N]: ");
@@ -214,7 +208,7 @@ class Program
                     File.Delete(fileName);
                     Console.WriteLine("Password was sucessfully deleted!");
                     break;
-                }                
+                }
                 else
                 {
                     return;
@@ -239,8 +233,8 @@ class Program
         int passwordSC;
         int passwordNR;
         string input;
-        string path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\MasterPassword.txt";
-        string MasterPassword = File.ReadAllText(path); int x = 0;
+        string MasterPassword = File.ReadAllText(Path.Combine(basePath, "MasterPassword.txt"));
+        int x = 0;
         while (true)
         {
             Console.Write("Type your ADMINPASSWORD: ");
@@ -261,10 +255,9 @@ class Program
         }
         while (true)
         {
-            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\passwords\\";
             Console.Write("Which password do you want?: ");
             input = Console.ReadLine();
-            fileName += input;
+            string fileName = Path.Combine(basePath, input);
             if (File.Exists(fileName))
             {
                 string fileContent;
@@ -274,7 +267,7 @@ class Program
                 passwordSC = Regex.Matches(fileContent, "[°!\"§${[|>:;,._<+}%&/()=?]").Count;
                 passwordNR = Regex.Matches(fileContent, "[0123456789]").Count;
                 passwordUC = Regex.Matches(fileContent, "[ABCDEFGHIJKLMNOPQRSTUVWXYZ]").Count;
-                passwordLC = Regex.Matches(fileContent, "[abcdefghijklmnopqrstuvwxyz]").Count;              
+                passwordLC = Regex.Matches(fileContent, "[abcdefghijklmnopqrstuvwxyz]").Count;
                 if(passwordLength >= 16 && passwordNR >= 4 && passwordUC >= 4 && passwordSC >= 4 && passwordLC >= 5)
                 {
                     Console.WriteLine("The given password is very strong");
