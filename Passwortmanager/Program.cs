@@ -2,13 +2,11 @@
 class Program
 {
     public static bool run = true;
-    public static string passwordgen = "";
-    
+    public static string passwordGen = "";
+
     public static void Main()
-    {
-        
-        
-        string[] commands = new string[8];
+    {        
+        string[] commands = new string[9];
         commands[0] = "generate password";
         commands[1] = "new password";
         commands[2] = "clear";
@@ -75,7 +73,7 @@ class Program
         string input = Console.ReadLine();
         x = int.Parse(input);
         Console.WriteLine("This is your random password: ");
-        List<char> charakters = new() { '!', '§', '$', '%', '&', '/', '(', ')', '[', ']', '{', '}', '=', '\\', '?', '~', '#', '*', '-', '_', '+', '<', '>', '|', ';', ',', '"', '\'', '.', ':', '°', '^' };   
+        List<char> charakters = new(94) { '!', '§', '$', '%', '&', '/', '(', ')', '[', ']', '{', '}', '=', '\\', '?', '~', '#', '*', '-', '_', '+', '<', '>', '|', ';', ',', '"', '\'', '.', ':', '°', '^' };   
         for (char i = 'A'; i <= 'Z'; i++)
         {
             charakters.Add(i);
@@ -90,13 +88,15 @@ class Program
             charakters.Add(i);
         }       
         Random random = new();
-        
+        char[] genPassword = new char[x];
         for(int j = 0; j < x; j++)
         {
             int num = random.Next(0, charakters.Count);
-            passwordgen += charakters[num].ToString();            
+            genPassword[j] = charakters[num];
         }
-        Console.WriteLine(passwordgen);
+        passwordGen = new string(genPassword);
+        Console.WriteLine(passwordGen);
+
     }
 
     static void NewPassword()
@@ -109,9 +109,9 @@ class Program
         Console.Write("Type here your password: ");
         password = Console.ReadLine();
         path += use;
-        if (password == "generated password" && passwordgen != "")
+        if (password == "generated password" && passwordGen != "")
         {
-            password = passwordgen;
+            password = passwordGen;
         }
         File.WriteAllText(Path.Combine(path), password);
     }
@@ -128,7 +128,7 @@ class Program
     static void GetPassword()
     {
         string input;
-        string MasterPassword = File.ReadAllText(@"X:\Passwords\MasterPassword.txt");
+        string MasterPassword = File.ReadAllText(@":\Passwords\MasterPassword.txt");
         int x = 0;
         while (true)
         {
