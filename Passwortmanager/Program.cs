@@ -4,7 +4,7 @@ class Program
     public static bool run = true;
     public static string passwordGen = "";
     public static string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "passwords");
-
+    //sqlite SQL Datenbank, die als Datei vorliegt, DB Lite Browser
     public static void Main()
     {
         if (!Directory.Exists(basePath))
@@ -27,40 +27,40 @@ class Program
             {
                 Generate();
             }
-            else if(cmd == commands[2])
+            else if (cmd == commands[2])
             {
                 Console.Clear();
             }
-            else if(cmd == commands[1])
+            else if (cmd == commands[1])
             {
                 NewPassword();
             }
-            else if(cmd == commands[4])
+            else if (cmd == commands[4])
             {
                 Setpassword();
             }
+            else if (cmd == commands[5])
+            {
+                GetPassword();
+            }
+            else if (cmd == commands[6])
+            {
+                Delete();
+            }
+            else if (cmd == commands[7])
+            {
+                PasswordStrength();
+            }
             else if (cmd == "commands")
             {
-                for(int i = 0; i < commands.Length; i++)
+                for (int i = 0; i < commands.Length; i++)
                 {
                     Console.WriteLine(commands[i]);
                 }
             }
-            else if(cmd == commands[5])
-            {
-                GetPassword();
-            }
-            else if(cmd == commands[6])
-            {
-                Delete();
-            }
             else if (cmd == "exit")
             {
                 run = false;
-            }
-            else if(cmd == commands[7])
-            {
-                PasswordStrength();
             }
             else
             {
@@ -74,6 +74,10 @@ class Program
         int x;
         Console.Write("How many Charakters do you want?: ");
         string input = Console.ReadLine();
+        if (input == "exit")
+        {
+            return;
+        }
         x = int.Parse(input);
         Console.WriteLine("This is your random password: ");
         List<char> charakters = new(94) { '!', '§', '$', '%', '&', '/', '(', ')', '[', ']', '{', '}', '=', '\\', '?', '~', '#', '*', '-', '_', '+', '<', '>', '|', ';', ',', '"', '\'', '.', ':', '°', '^' };
@@ -92,7 +96,7 @@ class Program
         }
         Random random = new();
         char[] genPassword = new char[x];
-        for(int j = 0; j < x; j++)
+        for (int j = 0; j < x; j++)
         {
             int num = random.Next(0, charakters.Count);
             genPassword[j] = charakters[num];
@@ -107,6 +111,10 @@ class Program
         string password;
         Console.Write("Which usage?: ");
         string use = Console.ReadLine();
+        if (use == "exit")
+        {
+            return;
+        }
         Console.Write("Type here your password: ");
         password = Console.ReadLine();
         string filename = Path.Combine(basePath, use);
@@ -122,6 +130,10 @@ class Program
         string adminPassword;
         Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
         adminPassword = Console.ReadLine();
+        if (adminPassword == "exit")
+        {
+            return;
+        }
         File.WriteAllText(Path.Combine(basePath, "MasterPassword.txt"), adminPassword);
     }
 
@@ -138,11 +150,15 @@ class Program
             {
                 break;
             }
+            else if (input == "exit")
+            {
+                return;
+            }
             else
             {
                 x++;
             }
-            if(x == 3)
+            if (x == 3)
             {
                 run = false;
                 return;
@@ -160,7 +176,7 @@ class Program
                 Console.WriteLine(fileContent);
                 break;
             }
-            else if(input == "exit")
+            else if (input == "exit")
             {
                 return;
             }
@@ -184,6 +200,10 @@ class Program
             {
                 break;
             }
+            else if (input == "exit")
+            {
+                return;
+            }
             else
             {
                 x++;
@@ -205,8 +225,7 @@ class Program
                 input = Console.ReadLine();
                 if (input == "Y" || input == "y")
                 {
-                    File.Delete(fileName);
-                    Console.WriteLine("Password was sucessfully deleted!");
+                    File.Delete(fileName); Console.WriteLine("Password was sucessfully deleted!");
                     break;
                 }
                 else
@@ -268,11 +287,11 @@ class Program
                 passwordNR = Regex.Matches(fileContent, "[0123456789]").Count;
                 passwordUC = Regex.Matches(fileContent, "[ABCDEFGHIJKLMNOPQRSTUVWXYZ]").Count;
                 passwordLC = Regex.Matches(fileContent, "[abcdefghijklmnopqrstuvwxyz]").Count;
-                if(passwordLength >= 16 && passwordNR >= 4 && passwordUC >= 4 && passwordSC >= 4 && passwordLC >= 5)
+                if (passwordLength >= 16 && passwordNR >= 4 && passwordUC >= 4 && passwordSC >= 4 && passwordLC >= 5)
                 {
                     Console.WriteLine("The given password is very strong");
                 }
-                else if(passwordLength >= 8 && passwordNR >= 2 && passwordUC >= 2 && passwordSC >= 2 && passwordLC >= 3)
+                else if (passwordLength >= 8 && passwordNR >= 2 && passwordUC >= 2 && passwordSC >= 2 && passwordLC >= 3)
                 {
                     Console.WriteLine("The given password is moderate");
                 }
