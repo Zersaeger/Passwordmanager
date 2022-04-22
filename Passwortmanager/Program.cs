@@ -27,7 +27,7 @@ class Program
         while (run)
         {
             Console.Write("Command<< ");
-            string cmd = Console.ReadLine();
+            string cmd = Console.ReadLine()!;
             if (cmd == commands[0])
             {
                 Generate();
@@ -84,7 +84,7 @@ class Program
     {
         int x;
         Console.Write("How many Charakters do you want?: ");
-        string input = Console.ReadLine();
+        string input = Console.ReadLine()!;
         if (input == "exit")
         {
             return;
@@ -124,14 +124,14 @@ class Program
         bool password_found = false;
         int index_of_password_name = 0;
         Console.Write("Which usage?: ");
-        string use = Console.ReadLine();
+        string use = Console.ReadLine()!;
         if (use == "exit")
         {
             return;
         }
         
         Console.Write("Type here your password: ");
-        password = Console.ReadLine();
+        password = Console.ReadLine()!;
         
         if (password == "generated password" && passwordGen != "")
         {
@@ -169,10 +169,10 @@ class Program
             Console.WriteLine("You already have an administration-password");         
             for(int i = 0; i<3; i++){
                 Console.Write("Enter your old password: ");
-                string input = Console.ReadLine();
+                string input = Console.ReadLine()!;
                 if (input == adminPassword){
                     Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
-                    adminPassword = Console.ReadLine();
+                    adminPassword = Console.ReadLine()!;
                     if (adminPassword == "exit")
                     {
                     return;
@@ -189,7 +189,7 @@ class Program
             }             
         else if(adminPassword == ""){
             Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
-                adminPassword = Console.ReadLine();
+                adminPassword = Console.ReadLine()!;
                 if (adminPassword == "exit")
                 {
                     return;
@@ -206,7 +206,7 @@ class Program
         while (true)
         {
             Console.Write("Type your ADMINPASSWORD: ");
-            input = Console.ReadLine();
+            input = Console.ReadLine()!;
             if (input == MasterPassword)
             {
                 break;
@@ -231,7 +231,7 @@ class Program
             int index = 0;
             string filename = Path.Combine(basePath, "Passwords");
             Console.Write("Which password do you want?: ");
-            input = Console.ReadLine();
+            input = Console.ReadLine()!;
             if(input == "exit"){
                 break;
             }
@@ -265,7 +265,7 @@ class Program
         while (true)
         {
             Console.Write("Type your ADMINPASSWORD: ");
-            input = Console.ReadLine();
+            input = Console.ReadLine()!;
             if (input == MasterPassword)
             {
                 break;
@@ -288,16 +288,15 @@ class Program
         {
             bool password_found = false;
             string allText = "";
-            int index = 0;
             string fileName = Path.Combine(basePath, "Password");
             string filename = Path.Combine(basePath, "Passwords");
             Console.Write("Which password do you want to delete?: ");
-            input = Console.ReadLine();
+            input = Console.ReadLine()!;
             if(input == "exit"){
                 break;
             }
             Console.Write("Are you sure? [Y/N]: ");
-            string YN = Console.ReadLine();
+            string YN = Console.ReadLine()!;
             if (YN == "Y" || YN == "y")
             {
                 string[] allLines = File.ReadAllLines(filename);
@@ -341,7 +340,7 @@ class Program
         while (true)
         {
             Console.Write("Type your ADMINPASSWORD: ");
-            input = Console.ReadLine();
+            input = Console.ReadLine()!;
             if (input == MasterPassword)
             {
                 break;
@@ -361,7 +360,7 @@ class Program
             bool password_found = false;
             int index = 0;
             Console.Write("Which password do you want?: ");
-            input = Console.ReadLine();
+            input = Console.ReadLine()!;
             string fileName = Path.Combine(basePath, "Passwords");
             string[] allLines = File.ReadAllLines(fileName);
         for(int i = 0; i < allLines.Count(); i++){
