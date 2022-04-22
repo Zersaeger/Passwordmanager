@@ -9,6 +9,9 @@ class Program
     {
         if (!Directory.Exists(basePath))
             Directory.CreateDirectory(basePath);
+        if (!File.Exists(Path.Combine(basePath, "Passwords"))){
+            File.Create(Path.Combine(basePath, "Passwords")).Close();
+        }
         string[] commands = new string[10];
         commands[0] = "generate";
         commands[1] = "new password";
@@ -126,6 +129,7 @@ class Program
         {
             return;
         }
+        
         Console.Write("Type here your password: ");
         password = Console.ReadLine();
         
