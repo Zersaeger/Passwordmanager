@@ -7,7 +7,7 @@ Project to create, generate, save, retrieve and delete passwords.
 - Retrieve passwords
 - All passwords are saved in one file
 - Test password strength
-- delete passwords
+- Delete passwords
 ## Issues
 - Passwords aren't saved encrypted yet
 
