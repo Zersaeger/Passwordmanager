@@ -12,6 +12,18 @@ class Program
         if (!File.Exists(Path.Combine(basePath, "Passwords"))){
             File.Create(Path.Combine(basePath, "Passwords")).Close();
         }
+        if(!File.Exists(Path.Combine(basePath, "MasterPassword.txt"))){
+            string input;
+            File.Create(Path.Combine(basePath, "MasterPassword.txt")).Close();
+            Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
+                input = Console.ReadLine()!;
+                if (input == "exit")
+                {
+                    return;
+                }
+                File.WriteAllText(Path.Combine(basePath, "MasterPassword.txt"), input);
+        }
+
         string[] commands = new string[10];
         commands[0] = "generate";
         commands[1] = "new password";
@@ -163,9 +175,6 @@ class Program
 
     static void Setpassword()
     {
-        if(!File.Exists(Path.Combine(basePath, "MasterPassword.txt"))){
-            File.Create(Path.Combine(basePath, "MasterPassword.txt")).Close();
-        }
         string adminPassword = File.ReadAllText(Path.Combine(basePath, "MasterPassword.txt"));
         if(adminPassword != ""){
             Console.WriteLine("You already have an administration-password");         
