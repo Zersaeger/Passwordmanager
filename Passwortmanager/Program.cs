@@ -163,6 +163,9 @@ class Program
 
     static void Setpassword()
     {
+        if(!File.Exists(Path.Combine(basePath, "MasterPassword.txt"))){
+            File.Create(Path.Combine(basePath, "MasterPassword.txt")).Close();
+        }
         string adminPassword = File.ReadAllText(Path.Combine(basePath, "MasterPassword.txt"));
         if(adminPassword != ""){
             Console.WriteLine("You already have an administration-password");         
@@ -402,6 +405,10 @@ class Program
     }
     static void allPasswords(){
         string fileName = Path.Combine(basePath, "Passwords");
+        if(File.ReadAllText(Path.Combine(basePath, "Passwords")) == ""){
+            Console.WriteLine("You have no passwords yet");
+            return;
+        }
         string[] allLines = File.ReadAllLines(fileName);
         int num = 1;
         for(int i = 0; i < allLines.Count(); i++){
