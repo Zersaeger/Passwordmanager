@@ -67,7 +67,7 @@ class Program
                 allPasswords();
             }
             else if(cmd == commands[9]){
-                File.WriteAllText(basePath, "");
+                DeleteAll();
             }
             else if (cmd == "exit")
             {
@@ -95,7 +95,6 @@ class Program
         for (char i = 'A'; i <= 'Z'; i++)
         {
             charakters.Add(i);
-
         }
         for (char i = 'a'; i <= 'z'; i++)
         {
@@ -414,6 +413,48 @@ class Program
             else{
                 Console.WriteLine($"{num}) {output}");
                 num++;
+            }
+        }
+    }
+
+    static void DeleteAll(){
+        string input;
+        string MasterPassword = File.ReadAllText(Path.Combine(basePath, "MasterPassword.txt"));
+        int x = 0;
+        while (true)
+        {
+            Console.Write("Type your ADMINPASSWORD: ");
+            input = Console.ReadLine()!;
+            if (input == MasterPassword)
+            {
+                break;
+            }
+            else if (input == "exit")
+            {
+                return;
+            }
+            else
+            {
+                x++;
+            }
+            if (x == 3)
+            {
+                run = false;
+                return;
+            }
+        }
+        while (true)
+        {   
+            string fileName = Path.Combine(basePath, "Passwords");
+            string content = "";
+            Console.Write("Are you sure you want to delete everything? [Y/N]: ");
+            string YN = Console.ReadLine()!;
+            if (YN == "Y" || YN == "y"){
+                File.WriteAllText(Path.Combine(fileName), content);
+                return;
+            }
+            else{
+                return;
             }
         }
     }
