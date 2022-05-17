@@ -1,27 +1,32 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 class Program
 {
     public static bool run = true;
     public static string passwordGen = "";
+    public static string masterPassword = "";
     public static string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "passwords");
     public static void Main()
     {
         if (!Directory.Exists(basePath))
             Directory.CreateDirectory(basePath);
-        if (!File.Exists(Path.Combine(basePath, "Passwords"))){
+        if (!File.Exists(Path.Combine(basePath, "Passwords")))
+        {
             File.Create(Path.Combine(basePath, "Passwords")).Close();
         }
-        if(!File.Exists(Path.Combine(basePath, "MasterPassword.txt"))){
+        if (!File.Exists(Path.Combine(basePath, "MasterPassword.txt")))
+        {
             string input;
             File.Create(Path.Combine(basePath, "MasterPassword.txt")).Close();
             Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
-                input = Console.ReadLine()!;
-                if (input == "exit")
-                {
-                    return;
-                }
-                File.WriteAllText(Path.Combine(basePath, "MasterPassword.txt"), input);
+            input = Console.ReadLine()!;
+            if (input == "exit")
+            {
+                return;
+            }
+            File.WriteAllText(Path.Combine(basePath, "MasterPassword.txt"), input);
         }
 
         string[] commands = new string[10];
@@ -40,54 +45,47 @@ class Program
         {
             Console.Write("Command<< ");
             string cmd = Console.ReadLine()!;
-            if (cmd == commands[0])
+            switch (cmd)
             {
-                Generate();
-            }
-            else if (cmd == commands[2])
-            {
-                Console.Clear();
-            }
-            else if (cmd == commands[1])
-            {
-                NewPassword();
-            }
-            else if (cmd == commands[4])
-            {
-                Setpassword();
-            }
-            else if (cmd == commands[5])
-            {
-                GetPassword();
-            }
-            else if (cmd == commands[6])
-            {
-                Delete();
-            }
-            else if (cmd == commands[7])
-            {
-                PasswordStrength();
-            }
-            else if (cmd == "commands")
-            {
-                for (int i = 0; i < commands.Length; i++)
-                {
-                    Console.WriteLine(commands[i]);
-                }
-            }
-            else if(cmd == commands[8]){
-                allPasswords();
-            }
-            else if(cmd == commands[9]){
-                DeleteAll();
-            }
-            else if (cmd == "exit")
-            {
-                run = false;
-            }
-            else
-            {
-                Console.WriteLine("hmmm this command doesn't exists yet...");
+                case "generate":
+                    Generate();
+                    break;
+                case "new password":
+                    NewPassword();
+                    break;
+                case "clear":
+                    Console.Clear();
+                    break;
+                case "set password":
+                    Setpassword();
+                    break;
+                case "get password":
+                    GetPassword();
+                    break;
+                case "delete":
+                    Delete();
+                    break;
+                case "password strength":
+                    PasswordStrength();
+                    break;
+                case "all password names":
+                    AllPasswords();
+                    break;
+                case "delete all":
+                    DeleteAll();
+                    break;
+                case "commands":
+                    for (int i = 0; i < commands.Length; i++)
+                    {
+                        Console.WriteLine(commands[i]);
+                    }
+                    break;
+                case "exit":
+                    run = false;
+                    break;
+                default:
+                    Console.WriteLine($"command not found: {cmd}");
+                    break;
             }
         }
     }
@@ -101,111 +99,135 @@ class Program
         {
             return;
         }
-        x = int.Parse(input);
-        Console.WriteLine("This is your random password: ");
-        List<char> charakters = new(94) { '!', '§', '$', '%', '&', '/', '(', ')', '[', ']', '{', '}', '=', '\\', '?', '~', '#', '*', '-', '_', '+', '<', '>', '|', ';', ',', '"', '\'', '.', ':', '°', '^' };
-        for (char i = 'A'; i <= 'Z'; i++)
+        try
         {
-            charakters.Add(i);
+            if (input == "exit")
+            {
+                return;
+            }
+            x = int.Parse(input);
+            Console.WriteLine("This is your random password: ");
+            List<char> charakters = new(94) { '!', '§', '$', '%', '&', '/', '(', ')', '[', ']', '{', '}', '=', '\\', '?', '~', '#', '*', '-', '_', '+', '<', '>', '|', ';', ',', '"', '\'', '.', '°', '^' };
+            for (char i = 'A'; i <= 'Z'; i++)
+            {
+                charakters.Add(i);
+            }
+            for (char i = 'a'; i <= 'z'; i++)
+            {
+                charakters.Add(i);
+            }
+            for (char i = '0'; i <= '9'; i++)
+            {
+                charakters.Add(i);
+            }
+            Random random = new();
+            char[] genPassword = new char[x];
+            for (int j = 0; j < x; j++)
+            {
+                int num = random.Next(0, charakters.Count);
+                genPassword[j] = charakters[num];
+            }
+            passwordGen = new string(genPassword);
+            Console.WriteLine(passwordGen);
         }
-        for (char i = 'a'; i <= 'z'; i++)
+        catch
         {
-            charakters.Add(i);
+            Console.WriteLine("Enter a NUMBER");
         }
-        for (char i = '0'; i <= '9'; i++)
-        {
-            charakters.Add(i);
-        }
-        Random random = new();
-        char[] genPassword = new char[x];
-        for (int j = 0; j < x; j++)
-        {
-            int num = random.Next(0, charakters.Count);
-            genPassword[j] = charakters[num];
-        }
-        passwordGen = new string(genPassword);
-        Console.WriteLine(passwordGen);
-
     }
 
     static void NewPassword()
     {
+
         string password;
         string filename = Path.Combine(basePath, "Passwords");
         bool password_found = false;
         int index_of_password_name = 0;
         Console.Write("Which usage?: ");
         string use = Console.ReadLine()!;
+
         if (use == "exit")
         {
             return;
         }
-        
+
         Console.Write("Type here your password: ");
         password = Console.ReadLine()!;
-        
+
         if (password == "generated password" && passwordGen != "")
         {
             password = passwordGen;
         }
-        else if(password == "exit"){
+        else if (password == "exit")
+        {
             return;
         }
         string[] allLines = File.ReadAllLines(filename);
-        for(int i = 0; i < allLines.Count(); i++){
-            string[] tokens = allLines[i].Split(":");
-            if(tokens[0] == use){
+        for (int i = 0; i < allLines.Count(); i++)
+        {
+            string[] tokens = allLines[i].Split("¥");
+            if (tokens[0] == use)
+            {
                 password_found = true;
                 index_of_password_name = i;
                 break;
             }
         }
-        if(!password_found){
+        if (!password_found)
+        {
             StreamWriter x = File.AppendText(filename);
-            x.WriteLine(use + ":" + password);
+            x.WriteLine(use + "¥" + password);
             x.Close();
         }
-        else{
+        else
+        {
             int index = index_of_password_name;
-            allLines[index] = use + ":" + password;
+            allLines[index] = use + "¥" + password;
             File.WriteAllLines(filename, allLines);
         }
-        
+
     }
 
     static void Setpassword()
     {
         string adminPassword = File.ReadAllText(Path.Combine(basePath, "MasterPassword.txt"));
-        if(adminPassword != ""){
-            Console.WriteLine("You already have an administration-password");         
-            for(int i = 0; i<3; i++){
+        if (adminPassword != "")
+        {
+            Console.WriteLine("You already have an administration-password");
+            for (int i = 0; i < 3; i++)
+            {
                 Console.Write("Enter your old password: ");
                 string input = Console.ReadLine()!;
-                if (input == adminPassword){
+                if (input == adminPassword)
+                {
                     Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
                     adminPassword = Console.ReadLine()!;
                     if (adminPassword == "exit")
                     {
-                    return;
+                        return;
                     }
-                    else{
-                    File.WriteAllText(Path.Combine(basePath, "MasterPassword.txt"), adminPassword);
+                    else
+                    {
+                        File.WriteAllText(Path.Combine(basePath, "MasterPassword.txt"), adminPassword);
                     }
                     i = 3;
                 }
-                else if (input != adminPassword){
-                        Console.WriteLine("wrong password, try it again...");
-                    }
-                }
-            }             
-        else if(adminPassword == ""){
-            Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
-                adminPassword = Console.ReadLine()!;
-                if (adminPassword == "exit")
+                else if (input != adminPassword)
                 {
-                    return;
+                    Console.WriteLine("wrong password, try it again...");
                 }
-                File.WriteAllText(Path.Combine(basePath, "MasterPassword.txt"), adminPassword);
+            }
+        }
+        else if (adminPassword == "")
+        {
+            Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
+            adminPassword = Console.ReadLine()!;
+            if (adminPassword == "exit")
+            {
+                return;
+            }
+            masterPassword = adminPassword;
+            File.WriteAllText(Path.Combine(basePath, "MasterPassword.txt"), adminPassword);
         }
     }
 
@@ -231,10 +253,10 @@ class Program
                 x++;
                 if (x == 3)
                 {
-                run = false;
-                return;
+                    run = false;
+                    return;
                 }
-            }        
+            }
         }
         while (true)
         {
@@ -243,25 +265,30 @@ class Program
             string filename = Path.Combine(basePath, "Passwords");
             Console.Write("Which password do you want?: ");
             input = Console.ReadLine()!;
-            if(input == "exit"){
+            if (input == "exit")
+            {
                 break;
             }
             string[] allLines = File.ReadAllLines(filename);
-            for(int i = 0; i < allLines.Count(); i++){
-                string[] tokens = allLines[i].Split(":");
-                if(tokens[0] == input){
+            for (int i = 0; i < allLines.Count(); i++)
+            {
+                string[] tokens = allLines[i].Split("¥");
+                if (tokens[0] == input)
+                {
                     password_found = true;
                     index = i;
                     break;
                 }
             }
-            if(password_found){
-                string[] outputArr = allLines[index].Split(":");
+            if (password_found)
+            {
+                string[] outputArr = allLines[index].Split("¥");
                 string output = outputArr[1];
                 Console.WriteLine($"Password for {input} is:\n{output}");
                 break;
             }
-            else{
+            else
+            {
                 Console.WriteLine("Password does not exist yet...");
 
             }
@@ -303,7 +330,8 @@ class Program
             string filename = Path.Combine(basePath, "Passwords");
             Console.Write("Which password do you want to delete?: ");
             input = Console.ReadLine()!;
-            if(input == "exit"){
+            if (input == "exit")
+            {
                 break;
             }
             Console.Write("Are you sure? [Y/N]: ");
@@ -311,21 +339,26 @@ class Program
             if (YN == "Y" || YN == "y")
             {
                 string[] allLines = File.ReadAllLines(filename);
-                for(int i = 0; i < allLines.Count(); i++){
-                    string[] tokens = allLines[i].Split(":");
-                    if(tokens[0] != input){
+                for (int i = 0; i < allLines.Count(); i++)
+                {
+                    string[] tokens = allLines[i].Split("¥");
+                    if (tokens[0] != input)
+                    {
                         allText += allLines[i] + "\n";
                     }
-                    else{
+                    else
+                    {
                         password_found = true;
                     }
                 }
-                if(password_found){
+                if (password_found)
+                {
                     File.WriteAllText(filename, allText);
                     Console.WriteLine("Password is deleted");
                     return;
                 }
-                else{
+                else
+                {
                     Console.WriteLine("Password does not exist yet...");
                     return;
                 }
@@ -334,7 +367,7 @@ class Program
             {
                 return;
             }
-            
+
         }
     }
 
@@ -374,18 +407,21 @@ class Program
             input = Console.ReadLine()!;
             string fileName = Path.Combine(basePath, "Passwords");
             string[] allLines = File.ReadAllLines(fileName);
-        for(int i = 0; i < allLines.Count(); i++){
-            string[] tokens = allLines[i].Split(":");
-            if(tokens[0] == input){
-                password_found = true;
-                index = i;
-                break;
+            for (int i = 0; i < allLines.Count(); i++)
+            {
+                string[] tokens = allLines[i].Split("¥");
+                if (tokens[0] == input)
+                {
+                    password_found = true;
+                    index = i;
+                    break;
+                }
+
             }
-            
-        }
-        string[] outputArr = allLines[index].Split(":");
-        if(password_found){
-            string Password = outputArr[1];
+            string[] outputArr = allLines[index].Split("¥");
+            if (password_found)
+            {
+                string Password = outputArr[1];
                 Console.WriteLine(Password);
                 passwordLength = Password.Length;
                 passwordSC = Regex.Matches(Password, "[°!\"§${[|>:;,._<+}%&/()=?]").Count;
@@ -405,35 +441,41 @@ class Program
                     Console.WriteLine("The given password is weak");
                 }
                 break;
-        }
+            }
             else
             {
                 Console.WriteLine("Named password doesn't exist yet. Make sure you typed it correctly...");
             }
         }
     }
-    static void allPasswords(){
+    static void AllPasswords()
+    {
         string fileName = Path.Combine(basePath, "Passwords");
-        if(File.ReadAllText(Path.Combine(basePath, "Passwords")) == ""){
+        if (File.ReadAllText(Path.Combine(basePath, "Passwords")) == "")
+        {
             Console.WriteLine("You have no passwords yet");
             return;
         }
         string[] allLines = File.ReadAllLines(fileName);
         int num = 1;
-        for(int i = 0; i < allLines.Count(); i++){
-            string[] tokens = allLines[i].Split(":");
+        for (int i = 0; i < allLines.Count(); i++)
+        {
+            string[] tokens = allLines[i].Split("¥");
             string output = tokens[0];
-            if(allLines[i] == null || allLines[i] == ""){
+            if (allLines[i] == null || allLines[i] == "")
+            {
                 continue;
             }
-            else{
+            else
+            {
                 Console.WriteLine($"{num}) {output}");
                 num++;
             }
         }
     }
 
-    static void DeleteAll(){
+    static void DeleteAll()
+    {
         string input;
         string MasterPassword = File.ReadAllText(Path.Combine(basePath, "MasterPassword.txt"));
         int x = 0;
@@ -460,16 +502,18 @@ class Program
             }
         }
         while (true)
-        {   
+        {
             string fileName = Path.Combine(basePath, "Passwords");
             string content = "";
             Console.Write("Are you sure you want to delete everything? [Y/N]: ");
             string YN = Console.ReadLine()!;
-            if (YN == "Y" || YN == "y"){
+            if (YN == "Y" || YN == "y")
+            {
                 File.WriteAllText(Path.Combine(fileName), content);
                 return;
             }
-            else{
+            else
+            {
                 return;
             }
         }
