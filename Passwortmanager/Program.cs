@@ -11,7 +11,10 @@ class Program
     public static void Main()
     {
         if (!Directory.Exists(basePath))
+        {
             Directory.CreateDirectory(basePath);
+        }
+
         if (!File.Exists(Path.Combine(basePath, "Passwords")))
         {
             File.Create(Path.Combine(basePath, "Passwords")).Close();
@@ -22,10 +25,6 @@ class Program
             File.Create(Path.Combine(basePath, "MasterPassword.txt")).Close();
             Console.Write("Set here your password, which gives you access to all the password you created and saved: ");
             input = Console.ReadLine()!;
-            if (input == "exit")
-            {
-                return;
-            }
             File.WriteAllText(Path.Combine(basePath, "MasterPassword.txt"), input);
         }
 
@@ -41,6 +40,7 @@ class Program
         commands[8] = "all password names";
         commands[9] = "delete all";
         Console.WriteLine("Hello. What do you want to do? Say 'commands' to see all of them.");
+
         while (run)
         {
             Console.Write("Command<< ");
@@ -92,20 +92,17 @@ class Program
 
     static void Generate()
     {
-        int x;
+        int length;
         Console.Write("How many Charakters do you want?: ");
         string input = Console.ReadLine()!;
         if (input == "exit")
         {
             return;
         }
+
         try
         {
-            if (input == "exit")
-            {
-                return;
-            }
-            x = int.Parse(input);
+            length = int.Parse(input);
             Console.WriteLine("This is your random password: ");
             List<char> charakters = new(94) { '!', '§', '$', '%', '&', '/', '(', ')', '[', ']', '{', ':', '}', '=', '\\', '?', '~', '#', '*', '-', '_', '+', '<', '>', '|', ';', ',', '"', '\'', '.', '°', '^' };
             for (char i = 'A'; i <= 'Z'; i++)
@@ -120,12 +117,12 @@ class Program
             {
                 charakters.Add(i);
             }
-            Random random = new();
-            char[] genPassword = new char[x];
-            for (int j = 0; j < x; j++)
+            Random random = new Random();
+            char[] genPassword = new char[length];
+            for (int i = 0; i < length; i++)
             {
                 int num = random.Next(0, charakters.Count);
-                genPassword[j] = charakters[num];
+                genPassword[i] = charakters[num];
             }
             passwordGen = new string(genPassword);
             Console.WriteLine(passwordGen);
